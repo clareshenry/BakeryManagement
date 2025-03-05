@@ -28,6 +28,8 @@ namespace BakeryManagement.Domain.Entities
             {
                 Orders.Add(order);
                 Console.WriteLine($"Order added to {Name}.");
+                var total = Orders.Sum(order => order.TotalBreads());
+                Console.WriteLine($"Total breads: {total}");
             }
             else
             {
