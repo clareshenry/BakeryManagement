@@ -28,7 +28,5 @@ namespace BakeryManagement.Domain.Entities
             FermentTime = fermentTime;
             Temperature = temperature;
         }
-
-        public abstract void Prepare();
     }
 }

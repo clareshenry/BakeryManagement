@@ -25,17 +25,5 @@ namespace BakeryManagement.Domain.Entities
                 TimeSpan.FromHours(4),
                 180
             ) { }
-
-        public override void Prepare()
-        {
-            Console.WriteLine("Preparing Hamburger Bun...");
-            Console.WriteLine($"Mixing ingredients (excluding sesame seeds and gilding)...");
-            Console.WriteLine("Cutting dough...");
-            Console.WriteLine("Resting dough for 30 minutes...");
-            Console.WriteLine("Shaping dough...");
-            Console.WriteLine("Letting dough ferment for 4 hrs...");
-            Console.WriteLine("Placing sesame seeds and gilding on top...");
-            Console.WriteLine($"Cooking at {Temperature}°C for 15 minutes...");
-        }
     }
 }

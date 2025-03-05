@@ -18,16 +18,5 @@ namespace BakeryManagement.Domain.Entities
                 TimeSpan.FromDays(1),
                 270
             ) { }
-
-        public override void Prepare()
-        {
-            Console.WriteLine($"Preparing {Name}...");
-            Console.WriteLine("1. Mixing ingredients...");
-            Console.WriteLine("2. Letting the dough rest for 30 minutes...");
-            Console.WriteLine("3. Folding the dough...");
-            Console.WriteLine("4. Letting the dough ferment for 1 day...");
-            Console.WriteLine("5. Shaping the dough...");
-            Console.WriteLine("6. Cooking at 270°C for 15 minutes...");
-        }
     }
 }

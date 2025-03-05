@@ -2,14 +2,14 @@ namespace BakeryManagement.Domain.Entities
 {
     public class OrderItem
     {
-        public int Id { get; }
+        public Guid Id { get; }
         public Bread Bread { get; }
         public int Quantity { get; }
         public double Total => Bread.Price * Quantity;
 
-        public OrderItem(int id, Bread bread, int quantity)
+        public OrderItem(Bread bread, int quantity)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Bread = bread;
             Quantity = quantity;
         }

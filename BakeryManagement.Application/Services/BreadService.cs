@@ -5,36 +5,36 @@ namespace BakeryManagement.Application.Services
 {
     public class BreadService
     {
-        private readonly IBreadRepository _breadRepository;
+        private readonly IRecipePrinter _recipePrinter;
 
-        public BreadService(IBreadRepository breadRepository)
+        public BreadService(IRecipePrinter recipePrinter)
         {
-            _breadRepository = breadRepository;
+            _recipePrinter = recipePrinter;
         }
 
-        public async Task<IEnumerable<Bread>> GetAllBreadsAsync()
+        public void PrintAllRecipes(BakeryOffice bakeryOffice)
         {
-            return await _breadRepository.GetAllAsync();
-        }
+            var breadOrders = bakeryOffice
+                .Orders.SelectMany(order => order.Breads) // Flatten OrderItems
+                .GroupBy(orderItem => orderItem.Bread.Name) // Group by bread name
+                .Select(group => new
+                {
+                    BreadType = group.Key,
+                    Quantity = group.Sum(item => item.Quantity), // Sum all quantities
+                    SampleBread = group.First().Bread, // Get a sample bread object for ingredients
+                })
+                .ToList();
 
-        public async Task<Bread?> GetBreadByIdAsync(int id)
-        {
-            return await _breadRepository.GetByIdAsync(id);
-        }
+            foreach (var breadOrder in breadOrders)
+            {
+                var quantity = breadOrders.Count();
 
-        public async Task AddBreadAsync(Bread bread)
-        {
-            await _breadRepository.AddAsync(bread);
-        }
-
-        public async Task UpdateBreadAsync(Bread bread)
-        {
-            await _breadRepository.UpdateAsync(bread);
-        }
-
-        public async Task DeleteBreadAsync(int id)
-        {
-            await _breadRepository.DeleteAsync(id);
+                _recipePrinter.PrintRecipe(
+                    breadOrder.BreadType,
+                    quantity,
+                    breadOrder.SampleBread.Ingredients
+                );
+            }
         }
     }
 }

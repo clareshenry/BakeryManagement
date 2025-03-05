@@ -2,28 +2,16 @@ namespace BakeryManagement.Domain.Entities
 {
     public class Order
     {
-        public int Id { get; }
+        public Guid Id { get; }
         public List<OrderItem> Breads { get; }
         public double TotalCost => Breads.Sum(item => item.Total);
 
-        public Order(int id, List<OrderItem> breads)
+        public Order(List<OrderItem> breads)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Breads = breads;
         }
 
         public int TotalBreads() => Breads.Sum(item => item.Quantity);
-
-        public void Prepare()
-        {
-            Console.WriteLine($"Preparing order {Id}...");
-            foreach (var item in Breads)
-            {
-                for (int i = 0; i < item.Quantity; i++)
-                {
-                    item.Bread.Prepare();
-                }
-            }
-        }
     }
 }

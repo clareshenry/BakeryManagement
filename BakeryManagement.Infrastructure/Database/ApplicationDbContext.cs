@@ -16,7 +16,18 @@ namespace BakeryManagement.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.Entity<BakeryOffice>(builder =>
+            {
+                builder.HasKey(bakeryOffice => bakeryOffice.Id);
+                builder
+                    .Property(bakeryOffice => bakeryOffice.Name)
+                    .HasColumnName("name")
+                    .IsRequired();
+                builder
+                    .Property(bakeryOffice => bakeryOffice.Capacity)
+                    .HasColumnName("capacity")
+                    .IsRequired();
+            });
         }
 
         // protected override void OnModelCreating(ModelBuilder modelBuilder)

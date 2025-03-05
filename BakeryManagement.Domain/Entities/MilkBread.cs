@@ -21,16 +21,5 @@ namespace BakeryManagement.Domain.Entities
                 TimeSpan.FromHours(4),
                 180
             ) { }
-
-        public override void Prepare()
-        {
-            Console.WriteLine("Preparing Milk Bread...");
-            Console.WriteLine("Mixing ingredients...");
-            Console.WriteLine("Cutting dough...");
-            Console.WriteLine("Resting dough for 10 minutes...");
-            Console.WriteLine("Shaping dough...");
-            Console.WriteLine("Letting dough ferment for 4 hrs...");
-            Console.WriteLine("Cooking at 180°C for 15 minutes...");
-        }
     }
 }
