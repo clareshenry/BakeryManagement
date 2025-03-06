@@ -15,23 +15,21 @@ namespace BakeryManagement.Application.Services
         public void PrintAllRecipes(BakeryOffice bakeryOffice)
         {
             var breadOrders = bakeryOffice
-                .Orders.SelectMany(order => order.Breads) // Flatten OrderItems
-                .GroupBy(orderItem => orderItem.Bread.Name) // Group by bread name
+                .Orders.SelectMany(order => order.Breads)
+                .GroupBy(orderItem => orderItem.Bread.Name)
                 .Select(group => new
                 {
                     BreadType = group.Key,
-                    Quantity = group.Sum(item => item.Quantity), // Sum all quantities
-                    SampleBread = group.First().Bread, // Get a sample bread object for ingredients
+                    Quantity = group.Sum(item => item.Quantity),
+                    SampleBread = group.First().Bread,
                 })
                 .ToList();
 
             foreach (var breadOrder in breadOrders)
             {
-                var quantity = breadOrders.Count();
-
                 _recipePrinter.PrintRecipe(
                     breadOrder.BreadType,
-                    quantity,
+                    breadOrder.Quantity,
                     breadOrder.SampleBread.Ingredients
                 );
             }
