@@ -5,34 +5,16 @@ namespace BakeryManagement.Application.Services
 {
     public class BreadService
     {
-        private readonly IRecipePrinter _recipePrinter;
+        private readonly IBreadRepository _breadRepository;
 
-        public BreadService(IRecipePrinter recipePrinter)
+        public BreadService(IBreadRepository breadRepository)
         {
-            _recipePrinter = recipePrinter;
+            _breadRepository = breadRepository;
         }
 
-        public void PrintAllRecipes(BakeryOffice bakeryOffice)
+        public async Task<Bread?> GetBreadById(int id)
         {
-            var breadOrders = bakeryOffice
-                .Orders.SelectMany(order => order.Breads)
-                .GroupBy(orderItem => orderItem.Bread.Name)
-                .Select(group => new
-                {
-                    BreadType = group.Key,
-                    Quantity = group.Sum(item => item.Quantity),
-                    SampleBread = group.First().Bread,
-                })
-                .ToList();
-
-            foreach (var breadOrder in breadOrders)
-            {
-                _recipePrinter.PrintRecipe(
-                    breadOrder.BreadType,
-                    breadOrder.Quantity,
-                    breadOrder.SampleBread.Ingredients
-                );
-            }
+            return await _breadRepository.GetByIdAsync(id);
         }
     }
 }

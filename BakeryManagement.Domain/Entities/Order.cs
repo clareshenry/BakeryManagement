@@ -1,17 +1,36 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using BakeryManagement.Domain.Common.Constants;
+using BakeryManagement.Domain.Common.Entities;
+
 namespace BakeryManagement.Domain.Entities
 {
-    public class Order
+    public class Order : BaseEntity
     {
-        public Guid Id { get; }
-        public List<OrderItem> Breads { get; }
-        public double TotalCost => Breads.Sum(item => item.Total);
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 
-        public Order(List<OrderItem> breads)
+        public string Status { get; set; } = EnumStatus.ACTIVE.ToString();
+
+        public int BakeryOfficeId { get; set; }
+        public BakeryOffice BakeryOffice { get; set; }
+
+        public IEnumerable<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+        [NotMapped]
+        public EnumStatus EnumStatus
         {
-            Id = Guid.NewGuid();
-            Breads = breads;
+            get => Enum.TryParse(Status, out EnumStatus status) ? status : EnumStatus.ACTIVE;
+            set => Status = value.ToString();
         }
 
-        public int TotalBreads() => Breads.Sum(item => item.Quantity);
+        public Order(int bakeryOfficeId)
+        {
+            BakeryOfficeId = bakeryOfficeId;
+            Status = EnumStatus.ACTIVE.ToString();
+        }
+
+        public Order() { }
     }
 }

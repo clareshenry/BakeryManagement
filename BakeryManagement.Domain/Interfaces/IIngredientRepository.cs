@@ -2,5 +2,5 @@ using BakeryManagement.Domain.Entities;
 
 namespace BakeryManagement.Domain.Interfaces
 {
-    public interface IBreadRepository : IRepository<Bread> { }
+    public interface IIngredientRepository : IRepository<Ingredient> { }
 }

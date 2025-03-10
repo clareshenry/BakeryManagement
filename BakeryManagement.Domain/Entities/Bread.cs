@@ -1,32 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using BakeryManagement.Domain.Common.Entities;
+
 namespace BakeryManagement.Domain.Entities
 {
-    public abstract class Bread
+    public class Bread : BaseEntity
     {
-        public string Name { get; protected set; }
-        public double Price { get; protected set; }
-        public Dictionary<string, double> Ingredients { get; protected set; }
-        public TimeSpan CookingTime { get; protected set; }
-        public TimeSpan RestingTime { get; protected set; }
-        public TimeSpan FermentTime { get; protected set; }
-        public double Temperature { get; protected set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public required double Price { get; set; }
+        public TimeSpan CookingTime { get; set; }
+        public TimeSpan RestingTime { get; set; }
+        public TimeSpan FermentTime { get; set; }
+        public double Temperature { get; set; }
 
-        public Bread(
-            string name,
-            double price,
-            Dictionary<string, double> ingredients,
-            TimeSpan cookingTime,
-            TimeSpan restingTime,
-            TimeSpan fermentTime,
-            double temperature
-        )
-        {
-            Name = name;
-            Price = price;
-            Ingredients = ingredients;
-            CookingTime = cookingTime;
-            RestingTime = restingTime;
-            FermentTime = fermentTime;
-            Temperature = temperature;
-        }
+        public IEnumerable<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
     }
 }

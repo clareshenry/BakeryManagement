@@ -1,39 +1,59 @@
+using BakeryManagement.Application.Utils;
+
 namespace BakeryManagement.Application.Services
 {
     public class OptionManagerService
     {
-        private Dictionary<int, Action> options;
-        private Dictionary<int, string> descriptions;
+        // private readonly Dictionary<int, Func<Task>> _options = new Dictionary<int, Func<Task>>();
+        private readonly Dictionary<int, (Func<Task> Action, string Description)> _options =
+            new Dictionary<int, (Func<Task>, string)>();
 
-        public OptionManagerService()
+        public void AddOption(int optionNumber, Func<Task> action, string description)
         {
-            options = new Dictionary<int, Action>();
-            descriptions = new Dictionary<int, string>();
-        }
-
-        public void AddOption(int key, string description, Action action)
-        {
-            if (options.ContainsKey(key))
-                throw new ArgumentException($"The option {key} already exists.");
-
-            options[key] = action;
-            descriptions[key] = description;
-        }
-
-        public void PrintOptions()
-        {
-            foreach (var option in descriptions)
+            if (!_options.ContainsKey(optionNumber))
             {
-                Console.WriteLine($"{option.Key}: {option.Value}");
+                _options.Add(optionNumber, (action, description));
+            }
+            else
+            {
+                Console.WriteLine($"Option {optionNumber} already exists.");
             }
         }
 
-        public void ExecuteOption(int key)
+        public async Task ShowOptionsAsync()
         {
-            if (options.ContainsKey(key))
-                options[key]();
-            else
-                Console.WriteLine($"The option {key} does not exist.");
+            while (true)
+            {
+                foreach (var option in _options)
+                {
+                    Console.WriteLine($"{option.Key}. {option.Value.Description}");
+                }
+
+                string input = Validation.GetValidInput("Select an option (0 to exit):");
+
+                if (int.TryParse(input, out int optionNumber) && _options.ContainsKey(optionNumber))
+                {
+                    if (optionNumber == 0)
+                    {
+                        break;
+                    }
+
+                    if (_options.ContainsKey(optionNumber))
+                    {
+                        Console.WriteLine($"Executing option {optionNumber}...");
+                        Console.WriteLine("\n");
+                        await _options[optionNumber].Action();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid option. Please try again.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid option. Please try again.");
+                }
+            }
         }
     }
 }

@@ -4,17 +4,16 @@ using BakeryManagement.Domain.Common.Entities;
 
 namespace BakeryManagement.Domain.Entities
 {
-    public class BakeryOffice : BaseEntity
+    public class Ingredient : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public required string Name { get; set; }
-        public int Capacity { get; set; }
-        public required string Address { get; set; }
-        public required string PhoneNumber { get; set; }
+        public double Quantity { get; set; }
+        public string Unit { get; set; } = "g";
 
-        public IEnumerable<Menu> Menu { get; set; } = new List<Menu>();
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
+        public int BreadId { get; set; }
+        public required Bread Bread { get; set; }
     }
 }
