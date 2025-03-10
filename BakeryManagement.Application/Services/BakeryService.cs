@@ -11,6 +11,8 @@ namespace BakeryManagement.Application.Services
 
         private readonly MenuService _menuService;
 
+        private readonly RecipePrinterService _recipePrinter = new RecipePrinterService();
+
         public BakeryService(BakeryOfficeService bakeryOfficeService, MenuService menuService)
         {
             _bakeryOfficeService = bakeryOfficeService;
@@ -36,6 +38,12 @@ namespace BakeryManagement.Application.Services
                     office.Name
                 );
             }
+
+            mainMenuOptions.AddOption(
+                offices.Count() + 1,
+                async () => await Earnings(),
+                "Total Earned"
+            );
 
             mainMenuOptions.AddOption(
                 0,
@@ -169,16 +177,37 @@ namespace BakeryManagement.Application.Services
 
         private async Task PrepareOrders(int bakeryOfficeId)
         {
-            // TODO: print all the orders
+            var office = await _bakeryOfficeService.GetByIdAsync(bakeryOfficeId);
+            if (office == null)
+            {
+                throw new ArgumentException("BakeryOffice not found");
+            }
+            foreach (var order in office.Orders)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    var bread = orderItem.Bread;
+                    var ingredients = bread.Ingredients.ToDictionary(i => i.Name, i => i.Quantity);
+                    _recipePrinter.PrintRecipe(bread.Name, orderItem.Quantity, ingredients);
+                }
+            }
             await _bakeryOfficeService.PrepareAllOrders(bakeryOfficeId);
-            // var office = _bakeryOffices[index];
-            // var printer = new RecipePrinterService();
-            // Console.WriteLine($"\nPreparing {office.Orders.Count} orders at {office.Name}...");
-            //
-            // _breadService.PrintAllRecipes(office);
-            //
-            // _bakeryOffices[index].Orders.Clear();
-            // Console.WriteLine("✅ All orders have been prepared!");
+            Console.WriteLine("✅ All orders have been prepared!");
+        }
+
+        public async Task Earnings()
+        {
+            var total = await _bakeryOfficeService.GetTotalOrdersAndEarningsByBakeryOfficeAsync();
+            foreach (var item in total)
+            {
+                Console.WriteLine($"Bakery Office: {item.BakeryOffice.Name}");
+                Console.WriteLine($"Total Orders: {item.TotalOrders}");
+                Console.WriteLine($"Total Earnings: {item.TotalEarnings} $us");
+            }
+
+            var totalEarnings = total.Sum(item => item.TotalEarnings);
+
+            Console.WriteLine($"Total Earnings Bakery Fresh Bread: {totalEarnings} $us");
         }
     }
 }

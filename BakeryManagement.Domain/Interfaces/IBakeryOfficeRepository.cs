@@ -5,5 +5,6 @@ namespace BakeryManagement.Domain.Interfaces
     public interface IBakeryOfficeRepository : IRepository<BakeryOffice>
     {
         Task SetAllOrdersInactive(int bakeryOfficeId);
+        Task<IEnumerable<BakeryOffice>> GetAllWithInactiveOrdersAsync();
     }
 }

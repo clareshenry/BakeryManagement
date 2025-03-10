@@ -51,5 +51,27 @@ namespace BakeryManagement.Application.Services
         {
             await _bakeryOfficeRepository.SetAllOrdersInactive(id);
         }
+
+        public async Task<
+            IEnumerable<(BakeryOffice BakeryOffice, int TotalOrders, double TotalEarnings)>
+        > GetTotalOrdersAndEarningsByBakeryOfficeAsync()
+        {
+            var results =
+                new List<(BakeryOffice BakeryOffice, int TotalOrders, double TotalEarnings)>();
+
+            var bakeryOffices = await _bakeryOfficeRepository.GetAllWithInactiveOrdersAsync();
+
+            foreach (var bakeryOffice in bakeryOffices)
+            {
+                var totalOrders = bakeryOffice.Orders.Count();
+                var totalEarnings = bakeryOffice.Orders.Sum(order =>
+                    order.OrderItems.Sum(oi => oi.Quantity * oi.Bread.Price)
+                );
+
+                results.Add((bakeryOffice, totalOrders, totalEarnings));
+            }
+
+            return results;
+        }
     }
 }

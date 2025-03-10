@@ -41,5 +41,29 @@ namespace BakeryManagement.Infrastructure.Repositories
                     o.BakeryOfficeId == bakeryOfficeId && o.Status == EnumStatus.ACTIVE.ToString()
                 );
         }
+
+        public override async Task<BakeryOffice?> GetByIdAsync(int id)
+        {
+            return await _dbContext
+                .Set<BakeryOffice>()
+                .Include(bo => bo.Orders.Where(o => o.Status == EnumStatus.ACTIVE.ToString()))
+                .ThenInclude(o =>
+                    o.OrderItems.Where(oi => oi.Status == EnumStatus.ACTIVE.ToString())
+                )
+                .ThenInclude(oi => oi.Bread)
+                .FirstOrDefaultAsync(bo => bo.Id == id);
+        }
+
+        public async Task<IEnumerable<BakeryOffice>> GetAllWithInactiveOrdersAsync()
+        {
+            return await _dbContext
+                .Set<BakeryOffice>()
+                .Include(bo => bo.Orders.Where(o => o.Status == EnumStatus.INACTIVE.ToString()))
+                .ThenInclude(o =>
+                    o.OrderItems.Where(oi => oi.Status == EnumStatus.INACTIVE.ToString())
+                )
+                .ThenInclude(oi => oi.Bread)
+                .ToListAsync();
+        }
     }
 }

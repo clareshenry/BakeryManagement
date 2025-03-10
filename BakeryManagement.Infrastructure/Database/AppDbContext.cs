@@ -12,14 +12,15 @@ namespace BakeryManagement.Infrastructure.Database
         public DbSet<Menu> Menus { get; set; }
         public DbSet<BakeryOffice> BakeryOffices { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
             optionsBuilder.UseNpgsql(
-                "Host=localhost;Port=5432;Database=bakery_db;Username=eras_user;Password=eras_password"
+                "Host=localhost;Port=5432;Database=bakery_db;Username=postgres;Password=postgres"
             );
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
     }

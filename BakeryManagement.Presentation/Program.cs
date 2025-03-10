@@ -1,9 +1,9 @@
 ﻿using BakeryManagement.Application.Services;
-using BakeryManagement.Domain.Entities;
 using BakeryManagement.Infrastructure.Database;
 using BakeryManagement.Infrastructure.Repositories;
 
 var context = new AppDbContext();
+
 try
 {
     var bakeryService = new BakeryService(
