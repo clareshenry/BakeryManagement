@@ -51,6 +51,7 @@ namespace BakeryManagement.Infrastructure.Repositories
                     o.OrderItems.Where(oi => oi.Status == EnumStatus.ACTIVE.ToString())
                 )
                 .ThenInclude(oi => oi.Bread)
+                .ThenInclude(b => b.Ingredients)
                 .FirstOrDefaultAsync(bo => bo.Id == id);
         }
 
